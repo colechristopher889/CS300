@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Project3ABCU.cpp
 // Author      : Chris Cole
-// Date        : August 2022
+// Date        : October 2022
 // Version     : 1.0
 //============================================================================
 
@@ -10,6 +10,7 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -21,17 +22,17 @@ struct Course {
     vector<string> prerequisites;
 };
 
-//Function to split string based on spaces
-vector<string> tokenize(string s, string space = " ") {
+//Function to split string based on splits
+vector<string> tokenize(string s, string split = ",") {
 
     vector<string> stringArray;
     int begin = 0;
-    int end = s.find(space);
+    int end = s.find(split);
 
     while (end != -1) {
         stringArray.push_back(s.substr(begin, end - begin));
-        begin = end + space.size();
-        end = s.find(space, begin);
+        begin = end + split.size();
+        end = s.find(split, begin);
     }
 
     stringArray.push_back(s.substr(begin, end - begin));
@@ -41,8 +42,8 @@ vector<string> tokenize(string s, string space = " ") {
 
 // Function to load file and store the details into list of courses
 vector<Course> InputData() {
-    // use ifstream to open .txt file
-    ifstream inputFile("abcu.txt");
+    // use fstream to open .txt file
+    fstream inputFile("abcu.txt");
     vector<Course> courses;
     string line;
 
@@ -71,6 +72,7 @@ vector<Course> InputData() {
     inputFile.close();
 
     cout << "Courses Loaded" << endl;
+    
 
     //return course list
     return courses;
@@ -110,7 +112,7 @@ void PrintFullCourseList(vector<Course> courses)
     }
 
     // printing the list of all courses
-    cout << "Here is a sample schedule: " << endl;
+    cout << "Course List: " << endl;
     for (int i = 0; i < tempSize; i++){
        cout << courses[i].courseNumber << ", " << courses[i].name << endl;
     }
@@ -124,7 +126,9 @@ void searchCourse(vector<Course> courses){
 
     cout << "What course do you want to know about?";
     cin >> courseNumber;
-
+	
+    std::transform(courseNumber.begin(), courseNumber.end(), courseNumber.begin(), ::toupper);
+	
     //show course details if available
     cout << "Course Details: " << endl;
     for (int i = 0; i < tempSize; i++) {
@@ -149,16 +153,22 @@ int main(int argc, char** argv) {
     //display menu
     cout << "Welcome to the course planner." << endl;
     cout << endl;
-    cout << "1. Load Data Structure" << endl;
-    cout << "2. Print Course List" << endl;
-    cout << "3. Print Course" << endl;
-    cout << "9. Exit" << endl;
-    cout << endl;
+   
 
     //store menu input
     int userInput;
 
     do {
+        cout << endl;
+        cout << "-----------------------" << endl;
+        cout << "-----------------------" << endl;
+        cout << "1. Load Data Structure" << endl;
+        cout << "2. Print Course List" << endl;
+        cout << "3. Print Course" << endl;
+        cout << "9. Exit" << endl;
+        cout << "-----------------------" << endl;
+        cout << "-----------------------" << endl;
+        cout << endl;
         cout << "What would you like to do?" << endl;
         cin >> userInput;
 
@@ -177,9 +187,12 @@ int main(int argc, char** argv) {
             cout << "Thank you for using the course planner!" << endl;
             break;
         default:
-            cout << userInput << " is not a valid option" << endl;
+            cout << "********************" << endl;
+            cout << userInput << " is not a valid option!" << endl;
+            cout << "********************" << endl;
         }
-    } while (userInput != 9);
+    } 
+    while (userInput != 9);
 
     return 0;
 }
